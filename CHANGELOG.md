@@ -2,6 +2,9 @@
 
 ## v1.0.1 - 10/05/2026
 
+### CI
+- Switch publish from OIDC trusted publisher to npm token (`NPM_TOKEN` secret).
+
 ### Documentation
 - Tighten phrasing in `README.md` Requirements section.
 
