@@ -15,39 +15,13 @@ permissions:
 
 jobs:
   publish:
-    name: publish to npm
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: pnpm/action-setup@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-          cache: pnpm
-          registry-url: https://registry.npmjs.org
-
-      - run: pnpm install --frozen-lockfile
-
-      - run: pnpm lint
-
-      - run: pnpm typecheck
-
-      - run: pnpm test
-
-      - name: Verify tag matches package.json version
-        run: |
-          pkg_version=$(node -p "require('./package.json').version")
-          tag_version="${GITHUB_REF_NAME}"
-          if [ "$pkg_version" != "$tag_version" ]; then
-            echo "::error::tag ($tag_version) does not match package.json version ($pkg_version)"
-            exit 1
-          fi
-
-      - run: pnpm build
-
-      - name: Publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: pnpm publish --access public --no-git-checks
+    # Token-based fallback (NPM_TOKEN). Sparkline reverted from OIDC in 1.0.1;
+    # migrate back to OIDC once npmjs.com Trusted Publisher provisioning is
+    # cleared. To switch: remove `use-oidc: false` + `provenance: false` and
+    # `secrets:` block, and add `permissions: id-token: write` above.
+    uses: coroboros/ci/.github/workflows/npm-publish.yml@v1
+    with:
+      use-oidc: false
+      provenance: false
+    secrets:
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
