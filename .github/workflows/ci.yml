@@ -19,7 +19,7 @@ permissions:
 
 jobs:
   ci:
-    uses: coroboros/ci/.github/workflows/javascript-npm-package.yml@main
+    uses: coroboros/ci/.github/workflows/javascript-npm-package.yml@677e88f5053d2e5f6245273acbb2a24fcdf0f0d7
     with:
       provenance: false
     secrets:
@@ -30,4 +30,4 @@ jobs:
       NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
   security:
-    uses: coroboros/ci/.github/workflows/security.yml@main
+    uses: coroboros/ci/.github/workflows/security.yml@677e88f5053d2e5f6245273acbb2a24fcdf0f0d7
