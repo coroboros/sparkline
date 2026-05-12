@@ -3,12 +3,31 @@ name: ci
 on:
   push:
     branches: [main]
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+'
+      - '[0-9]+.[0-9]+.[0-9]+-*'
   pull_request:
     branches: [main]
 
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' && github.ref_type != 'tag' }}
+
 permissions:
   contents: read
+  id-token: write
 
 jobs:
+  ci:
+    uses: coroboros/ci/.github/workflows/javascript-npm-package.yml@main
+    with:
+      provenance: false
+    secrets:
+      NPM_CONFIG_FILE: ${{ secrets.NPM_CONFIG_FILE }}
+      NPM_PACKAGE_REGISTRY: ${{ secrets.NPM_PACKAGE_REGISTRY }}
+      NPM_PACKAGE_PROXY_REGISTRY: ${{ secrets.NPM_PACKAGE_PROXY_REGISTRY }}
+      NPM_PACKAGE_REGISTRY_TOKEN: ${{ secrets.NPM_PACKAGE_REGISTRY_TOKEN }}
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
   security:
     uses: coroboros/ci/.github/workflows/security.yml@main
