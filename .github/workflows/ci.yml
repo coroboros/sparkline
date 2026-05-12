@@ -28,5 +28,5 @@ jobs:
       NPM_PACKAGE_REGISTRY_TOKEN: ${{ secrets.NPM_PACKAGE_REGISTRY_TOKEN }}
       NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-  secrets:
-    uses: coroboros/ci/.github/workflows/secrets-scan.yml@main
+  security:
+    uses: coroboros/ci/.github/workflows/security.yml@main
