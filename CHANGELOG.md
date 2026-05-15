@@ -1,5 +1,14 @@
 # Changelog
 
+## v1.0.4 - 15/05/2026
+
+### Documentation
+- `sparkline` — add table of contents (#5)
+
+### Configuration
+- `sparkline` — forward NPM_EXTRA_CONFIG secret to the reusable workflow (#6)
+
+
 ## v1.0.3 - 15/05/2026
 
 ### Documentation
