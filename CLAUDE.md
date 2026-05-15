@@ -4,7 +4,7 @@ Zero-dependency SVG sparkline generator. Takes a numeric array and returns a pol
 
 ## Canonical rules
 
-Global rules (`~/.claude/rules/*`) inherit automatically — tech-standards, writing, find-docs, git-conventions, privacy, overrides. The path-scoped `@~/.claude/rules/changelog.md` applies when editing `CHANGELOG.md`. Git-conventions divergences are stated inline in `## Rules` below.
+Follows the Coroboros engineering global rules. Repo-specific divergences are stated inline in `## Rules` below.
 
 ## Tech Stack
 - TypeScript strict, ES modules + CJS dual build (tsdown)
@@ -44,4 +44,5 @@ Global rules (`~/.claude/rules/*`) inherit automatically — tech-standards, wri
 - Run `pnpm lint && pnpm typecheck && pnpm test` before every commit.
 - Run `pnpm bench` against `bench/baseline.md` when touching `src/render.ts` — no regression > 5 % at fixed feature set.
 - Scoped package — `publishConfig.access = "public"` is mandatory, do not remove.
-- **Git** — branch `main`; CI owns `npm publish` exclusively (tag-push triggers `release.yml` → OIDC Trusted Publisher with `npm provenance`, never manual — manual bypasses attestation and the pre-publish gates); run `pnpm lint && pnpm typecheck && pnpm test && pnpm build` locally before tagging; tag MUST equal `package.json` version (`release.yml` fails loud on mismatch); bump via `pnpm version patch|minor`; release body in `gh release create` stays minimal (no install snippet unless the install command changed). All other rules in `@~/.claude/rules/git-conventions.md` apply.
+- **Publish** — npm token (`NPM_PACKAGE_REGISTRY_TOKEN`), locked. OIDC Trusted Publisher is unavailable for this repo; keep the token in `ci.yml` and never attempt the OIDC switch.
+- **Git** — `main`-only; branch → PR → squash-merge → tag the merge commit. The tag is the only manual step; release automation (version bump, `CHANGELOG.md`, npm publish, GitHub release) is owned by [`coroboros/ci`](https://github.com/coroboros/ci). Never hand-edit `package.json` version or `CHANGELOG.md`. Run `pnpm lint && pnpm typecheck && pnpm test && pnpm build` before tagging.
