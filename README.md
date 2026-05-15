@@ -17,6 +17,16 @@ Calculates polyline points from a numeric series and returns a pure SVG string. 
 
 </div>
 
+<!-- omit in toc -->
+## Contents
+
+- [Requirements](#requirements)
+- [Install](#install)
+- [Usage](#usage)
+- [API](#api)
+- [Contributing](#contributing)
+- [License](#license)
+
 ## Requirements
 
 - Node.js `>=22` LTS. Use [fnm](https://github.com/Schniz/fnm) for version management — Rust-based, faster than nvm.
