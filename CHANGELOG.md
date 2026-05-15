@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.0.3 - 15/05/2026
+
+### Documentation
+- `sparkline` — clarify CI-owned release flow in CLAUDE.md (#4)
+
+
 ## v1.0.2 - 14/05/2026
 
 - Release 1.0.2
