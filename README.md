@@ -89,30 +89,101 @@ try {
 
 ## API
 
-### `sparkline(values, options?)`
+### Types
 
-Generates an SVG sparkline from an array of numbers.
+<details>
+<summary><code>SparklineOptions</code></summary>
+
+<br>
+
+Style and accessibility options for [`sparkline`](#api). Every field is optional. Invalid style options (`width`, `height`, `stroke`, `strokeWidth`, `strokeOpacity`, `precision`) fall back silently to their defaults.
+
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `width` | `number` | `135` | SVG width, in pixels. Must be `> 0`. |
+| `height` | `number` | `50` | SVG height, in pixels. Must be `> 0`. |
+| `stroke` | `string` | `#C9A96E` | Stroke color — CSS named color, hex (`#rgb`, `#rgba`, `#rrggbb`, `#rrggbbaa`), or functional notation (`rgb()`, `rgba()`, `hsl()`, `oklch()`, …). |
+| `strokeWidth` | `number` | `1.25` | Stroke width, in pixels. Must be `>= 0`. `0` produces an invisible polyline. |
+| `strokeOpacity` | `number` | `1` | Stroke opacity, in `[0, 1]`. |
+| `precision` | `integer` | `2` | Decimal places kept on every coordinate. Integer in `[0, 6]`. Lower values produce smaller SVGs. |
+| `title` | `string` | *(optional)* | Adds a `<title>` element and sets `role="img"` plus `aria-label` on the root `<svg>` (when `ariaLabel` is omitted). |
+| `ariaLabel` | `string` | *(optional)* | Explicit `aria-label` on the root `<svg>`. Takes precedence over `title` for the accessible name. |
+| `description` | `string` | *(optional)* | Adds a `<desc>` element for screen-reader long-form context. |
+
+</details>
+
+<details>
+<summary><code>SparklineError</code></summary>
+
+<br>
+
+Thrown by [`sparkline`](#api). Inherits from `Error`. See [Errors](#errors) for the code list.
+
+```ts
+class SparklineError extends Error {
+  readonly name: 'SparklineError';
+  readonly code: SparklineErrorCode;
+  readonly message: string;
+}
+```
+
+</details>
+
+<details>
+<summary><code>SparklineErrorCode</code></summary>
+
+<br>
+
+```ts
+type SparklineErrorCode = 'MISSING_VALUES' | 'INVALID_VALUES' | 'EMPTY_VALUES';
+```
+
+</details>
+
+<details>
+<summary><code>sparkline(values, options?)</code></summary>
+
+<br>
+
+Generate an SVG sparkline from an array of numeric values.
 
 **Parameters**
 
-| Option          | Type                   | Default       | Description                                                                                                                                         |
-| --------------- | ---------------------- | ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `values`        | `ReadonlyArray<number>`| *(required)*  | Finite numbers used to draw the sparkline. Must contain at least one element. Passed positionally.                                                  |
-| `width`         | `number`               | `135`         | SVG width, in pixels. Must be `> 0`. Invalid values fall back to the default.                                                                       |
-| `height`        | `number`               | `50`          | SVG height, in pixels. Must be `> 0`.                                                                                                               |
-| `stroke`        | `string`               | `#C9A96E`     | Stroke color — CSS named color, hex (`#rgb`, `#rgba`, `#rrggbb`, `#rrggbbaa`), or functional notation (`rgb()`, `rgba()`, `hsl()`, `oklch()`, …).   |
-| `strokeWidth`   | `number`               | `1.25`        | Stroke width, in pixels. Must be `>= 0`. `0` is honored and produces an invisible polyline.                                                         |
-| `strokeOpacity` | `number`               | `1`           | Stroke opacity, in `[0, 1]`.                                                                                                                        |
-| `precision`     | `integer`              | `2`           | Decimal places kept on every coordinate. Integer in `[0, 6]`. Lower values produce smaller SVGs.                                                    |
-| `title`         | `string`               | *(optional)*  | Adds a `<title>` element and sets `role="img"` plus `aria-label` on the root `<svg>` (when `ariaLabel` is omitted).                                 |
-| `ariaLabel`     | `string`               | *(optional)*  | Explicit `aria-label` on the root `<svg>`. Takes precedence over `title` for the accessible name.                                                   |
-| `description`   | `string`               | *(optional)*  | Adds a `<desc>` element for screen-reader long-form context.                                                                                        |
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `values` | `ReadonlyArray<number>` | *(required)* | Finite numbers used to draw the sparkline. Must contain at least one element. |
+| `options?` | [`SparklineOptions`](#types) | `{}` | Style and accessibility overrides. |
 
-**Returns** — `string`. The SVG markup (including `<polyline>`).
+**Returns** — `string`. The SVG markup including `<polyline>`.
 
-**Throws** — `SparklineError` (see [Errors](#errors)).
+**Throws** — [`SparklineError`](#types). Invalid `values` throw with one of [`MISSING_VALUES`, `INVALID_VALUES`, `EMPTY_VALUES`](#errors). Invalid style options fall back silently to their defaults.
 
-Invalid style options (`width`, `height`, `stroke`, `strokeWidth`, `strokeOpacity`, `precision`) fall back silently to their defaults. Invalid `values` throw.
+**Notes** — See [`bench/baseline.md`](bench/baseline.md) for SVG-render timings.
+
+**Examples**
+
+```ts
+sparkline([10, 50, 50, 200, 0]);
+// → <svg viewBox="0 0 135 50" ...><polyline .../></svg>
+
+sparkline([1, 2, 3, 2, 1], {
+  width: 200,
+  height: 60,
+  strokeWidth: 2,
+  ariaLabel: 'Trend',
+});
+// → accessible SVG with role="img" and aria-label="Trend"
+
+try {
+  sparkline([]);
+} catch (err) {
+  if (err instanceof SparklineError) {
+    err.code; // 'EMPTY_VALUES'
+  }
+}
+```
+
+</details>
 
 ### Accessibility
 
@@ -120,7 +191,7 @@ The polyline is inset by `strokeWidth / 2` so stroke caps never clip the viewBox
 
 When none of `title`, `ariaLabel`, or `description` are provided, the SVG is marked `aria-hidden="true"` — treat it as decorative. Pass any of them to opt into an accessible image: the root gets `role="img"` plus `aria-label` (from `ariaLabel` or `title`), and `<title>` / `<desc>` nest inside the SVG.
 
-### Examples
+### Gallery
 
 Rendered examples live in [`assets/examples`](assets/examples).
 
@@ -132,21 +203,11 @@ Rendered examples live in [`assets/examples`](assets/examples).
 
 ### Errors
 
-Errors thrown by `sparkline` are instances of `SparklineError`, which extends the native `Error`.
-
-```ts
-class SparklineError extends Error {
-  readonly name: 'SparklineError';
-  readonly code: 'MISSING_VALUES' | 'INVALID_VALUES' | 'EMPTY_VALUES';
-  readonly message: string;
-}
-```
-
-| Code              | Description                                                   |
-| ----------------- | ------------------------------------------------------------- |
-| `MISSING_VALUES`  | The `values` option is missing.                               |
-| `INVALID_VALUES`  | `values` is not an array, or contains non-finite numbers.     |
-| `EMPTY_VALUES`    | `values` is an empty array.                                   |
+| Code | Description |
+| --- | --- |
+| `MISSING_VALUES` | The `values` option is missing. |
+| `INVALID_VALUES` | `values` is not an array, or contains non-finite numbers. |
+| `EMPTY_VALUES` | `values` is an empty array. |
 
 ### Debugging
 
