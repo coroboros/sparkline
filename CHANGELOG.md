@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.0.5 - 20/05/2026
+
+### Documentation
+- `readme` — align API blocks to <details> pattern with Types group (#7)
+
+
 ## v1.0.4 - 15/05/2026
 
 ### Documentation
