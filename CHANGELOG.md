@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.0.6 - 21/05/2026
+
+### Documentation
+- `sparkline` — add Compared to alternatives section (#8)
+
+
 ## v1.0.5 - 20/05/2026
 
 ### Documentation

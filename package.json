@@ -1,6 +1,6 @@
 {
   "name": "@coroboros/sparkline",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Lightweight, zero-dependency SVG sparkline generator for Node.js.",
   "type": "module",
   "sideEffects": false,
