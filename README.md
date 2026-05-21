@@ -24,6 +24,7 @@ Calculates polyline points from a numeric series and returns a pure SVG string. 
 - [Install](#install)
 - [Usage](#usage)
 - [API](#api)
+- [Compared to alternatives](#compared-to-alternatives)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -216,6 +217,20 @@ The library uses Node's built-in [`util.debuglog`](https://nodejs.org/api/util.h
 ```bash
 NODE_DEBUG=sparkline node your-script.js
 ```
+
+## Compared to alternatives
+
+| Feature                                                | `sparkline` (shiwano) | `node-sparkline` | `@fnando/sparkline` | `react-sparklines` | **`@coroboros/sparkline`** |
+| ------------------------------------------------------ | :-------------------: | :--------------: | :-----------------: | :----------------: | :------------------------: |
+| Output                                                 | ASCII                 | SVG string       | SVG (mutates DOM)   | React (JSX → SVG)  | SVG string                 |
+| Runs in Node without DOM or React                      | yes                   | yes              | no                  | no                 | yes                        |
+| Zero runtime dependencies                              | no                    | yes              | yes                 | no                 | yes                        |
+| Accessibility (`title`, `aria-label`, `<desc>`)        | n/a                   | no               | no                  | no                 | yes                        |
+| Tunable coordinate precision                           | no                    | no               | no (fixed)          | no                 | yes                        |
+| Built-in TypeScript types                              | no                    | no               | no                  | no                 | yes                        |
+| ESM + CJS dual build                                   | no                    | no               | no                  | no                 | yes                        |
+
+The gap is accessibility-aware SVG output rendered in Node. `sparkline` (shiwano) returns Unicode block characters — fine in a terminal, off-limits in an `<img>` tag or a generated PDF. `@fnando/sparkline` mutates a passed `<svg>` DOM element; `react-sparklines` renders through a React tree. `node-sparkline` is the closest peer with an SVG string and zero deps, but ships no ARIA support, no precision control, no types, and CJS only. `@coroboros/sparkline` fills the rest: opt-in `title` / `aria-label` / `<desc>`, coordinate precision for wire-size control, built-in types, and a dual ESM/CJS build.
 
 ## Contributing
 
